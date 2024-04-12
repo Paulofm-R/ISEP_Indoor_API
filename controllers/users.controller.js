@@ -4,7 +4,32 @@ const bcrypt = require('bcrypt')
 
 exports.login = async (req, res) => {
     try {
-        // Codigo para o login do user
+        let user = await User.findOne({ email: req.body.email });
+
+        if (!user) {
+            return res.status(404).json({ success: false, msg: "Invalid email" });
+        }
+
+        const check = bcrypt.compareSync(req.body.password, user.password);
+
+        if (!check) {
+            return res.status(401).json({
+                success: false,
+                accessToken: null,
+                msg: "Password is incorrect"
+            })
+        }
+
+        const token = utilities.generateToken({ id: user._id, type: user.type })
+
+        console.log(token);
+
+        return res.status(200).json({
+            success: true,
+            accessToken: token,
+            id: user._id,
+            type: user.type,
+        })
     } catch (err) {
         if (err.name === "ValidationError") {
             let errors = [];
@@ -19,8 +44,16 @@ exports.login = async (req, res) => {
 }
 
 exports.register = async (req, res) => {
+    const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 10),
+        AccessibilityLvl: req.body.AccessibilityLvl
+    });
+
     try {
-       // codigo para o register do user
+        await user.save();
+        return res.status(201).json({ success: true, msg: "New User created successfully.", URL: `/user/${user._id}` })
     } catch (err) {
         if (err.name === "ValidationError") {
             let errors = [];
@@ -38,7 +71,12 @@ exports.register = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        // codigo para os admin terem acesso a lista de user
+        let data = await User
+            .find()
+            .select('name image type type active AccessibilityLvl')
+            .exec();
+        
+        return res.status(200).json({ success: true, user: data });
     } catch (err) {
         if (err.name === "ValidationError") {
             let errors = [];
@@ -52,7 +90,13 @@ exports.getAll = async (req, res) => {
 
 exports.findUser = async (req, res) => {
     try {
-        // codigo para encontrar um user em especifico (como o userID)
+        const user = await User.findById(req.params.userID).exec();
+
+        if (user === null) {
+            return status(404).json({ success: false, msg: `Could not find any user with the ID ${req.params.userID}` })
+        }
+
+        return res.json({ success: true, user: user })
     } catch (err) {
         if (err.name === "ValidationError") {
             let errors = [];
@@ -66,7 +110,12 @@ exports.findUser = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        // codigo para fazer alterações no user
+        const user = await User.findByIdAndUpdate(req.params.userID, req.body).exec();
+
+        if (!user) {
+            return res.status(404).json({ success: false, msg: `Cannot update user with id=${req.params.userID}. Check if user exists!` });
+        }
+        return res.status(200).json({ success: true, msg: `User id=${req.params.userID} has been updated successfully!` });
     } catch (err) {
         if (err.name === "ValidationError") {
             let errors = [];
@@ -80,7 +129,13 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        // codigo para eliminar um user
+        const user = await User.findByIdAndRemove(req.params.userID).exec()
+
+        if (!user) {
+            return res.status(404).json({ message: `It is not possible to delete the user with id=${req.params.userID}. Perhaps the user was not found!` });
+        } else {
+            return res.status(200).json({ message: `User with id=${req.params.userID} was successfully deleted` })
+        }
     } catch (err) {
         if (err.name === "ValidationError") {
             let errors = [];

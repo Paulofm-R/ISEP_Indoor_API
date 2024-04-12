@@ -21,10 +21,12 @@ const validateToken = async (req, res, next) => {
         const user = await User.findById(decoded.data.id).select('type').exec();
 
         if (!user)
-            return res.status(404).json({ success: false, msg: "Invalid email" });
+            return res.status(404).json({ success: false, msg: "Invalid user" });
 
         req.userID = decoded.data.id;
         req.userType = user.type;
+
+        console.log(req.userType);
         return next();
     } catch (err) {
         if (err.name === "TokenExpiredError")
@@ -38,6 +40,7 @@ const validateToken = async (req, res, next) => {
 
 const isAdmin = async (req, res, next) => {
     await validateToken(req, res, next);
+    console.log(req.userType);
     if (req.userType === 'admin') {
         return next();
     }
