@@ -25,26 +25,18 @@ router.post('/register', [
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', utilities.validateToken, utilities.isAdmin, (req, res) => {
     // await utilities.isAdmin(req, res);
     userController.getAll(req, res);
 })
 
-/*router.get('/:userID', utilities.validateToken, (req, res) => {
-    userController.findUser(req, res);
-})*/
-
-router.get('/:userID', (req, res) => {
+router.get('/:userID', utilities.validateToken, (req, res) => {
     userController.findUser(req, res);
 })
 
-/* router.put('/:userID', utilities.validateToken, (req, res) => {
+router.put('/:userID', utilities.validateToken, (req, res) => {
     userController.update(req, res);
-}) */
-
-router.put('/:userID', (req, res) => {
-    userController.update(req, res);
-}) 
+})
 
 router.delete('/:userID', utilities.validateToken, (req, res) => {
     userController.delete(req, res);

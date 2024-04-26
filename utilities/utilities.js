@@ -25,8 +25,6 @@ const validateToken = async (req, res, next) => {
 
         req.userID = decoded.data.id;
         req.userType = user.type;
-
-        console.log(req.userType);
         return next();
     } catch (err) {
         if (err.name === "TokenExpiredError")
@@ -38,9 +36,7 @@ const validateToken = async (req, res, next) => {
     }
 }
 
-const isAdmin = async (req, res, next) => {
-    await validateToken(req, res, next);
-    console.log(req.userType);
+const isAdmin = (req, res, next) => {
     if (req.userType === 'admin') {
         return next();
     }

@@ -92,11 +92,13 @@ exports.findUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.userID).exec();
 
-        if (user === null) {
-            return status(404).json({ success: false, msg: `Could not find any user with the ID ${req.params.userID}` })
-        }
+        if (user === null) 
+            return res.status(404).json({ success: false, msg: `Could not find any user with the ID ${req.params.userID}` })
 
-        return res.json({ success: true, user: user })
+        if (user._id == req.userID || req.userType == 'admin')
+            return res.json({ success: true, user: user })
+
+        return res.status(404).json({ success: false, msg: `You do not have permission to view this user's information` })
     } catch (err) {
         if (err.name === "ValidationError") {
             let errors = [];
