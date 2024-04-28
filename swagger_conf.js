@@ -1,8 +1,8 @@
 const options = {
     swaggerDefinition: {
         info: {
-            description: 'Mooc API for CAMUL project',
-            title: "Mooc API",
+            description: 'API for TASSI project',
+            title: "Indoor Map API",
             version: "1.0.0"
         },
         host: 'localhost:3000',

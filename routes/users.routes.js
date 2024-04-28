@@ -24,7 +24,7 @@ router.post('/login', [
  * @route POST /users/register
  * @group Users
  * @param {object} object.body - Form to create user - ex. {"name":"admin", "email": "user@example.com", "password":"1234", "AccessibilityLvl": '0'}
- * @param {number} object.body.AccessibilityLvl - Level of accessibility. Possible values: 0 (without disability), 1 (Visual Impairment), 2 (Motor Disability). 
+ * @param {enum} object.body.AccessibilityLvl - Level of accessibility - possible values: 0 (without disability), 1 (Visual Impairment), 2 (Motor Disability) 
  * @returns {object} 201 - New User created successfully.
  * @returns {Error} 400 - Missing data
  * @returns {Error} 500 - Something went wrong
