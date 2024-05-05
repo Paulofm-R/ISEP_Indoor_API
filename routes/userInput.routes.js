@@ -29,7 +29,8 @@ router.get('/', utilities.validateToken, utilities.isAdmin, (req, res) => {
 router.post('/', [
     body('userId').notEmpty().escape(),
     body('comment').notEmpty().escape(),
-    body('type').notEmpty().escape()
+    body('type').notEmpty().escape(),
+    body('satafetionLvl').notEmpty().escape()
 ], utilities.validateToken, (req, res) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {

@@ -53,7 +53,6 @@ router.post('/register', [
  * @security Bearer
  */
 router.get('/', utilities.validateToken, utilities.isAdmin, (req, res) => {
-    // await utilities.isAdmin(req, res);
     userController.getAll(req, res);
 })
 

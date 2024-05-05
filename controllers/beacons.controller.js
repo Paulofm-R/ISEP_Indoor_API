@@ -2,10 +2,9 @@ const Beacon = require('../models/beacons.model.js');
 const utilities = require('../utilities/utilities')
 
 exports.create = async (req, res) => {
-    
     // Create new beacon
     const beacon = new Beacon ({
-        positon: req.body.positon,
+        position: req.body.position,
         floor: req.body.floor,
         locationType: req.body.locationType,
         inDoor: req.body.inDoor
@@ -101,7 +100,7 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     try {
         // codigo para eliminar um beacom
-        const beacon = await Beacon.findByIdAndRemove(req.params.beaconID).exec();
+        const beacon = await Beacon.findOneAndDelete({ _id: req.params.beaconID }).exec();
 
         if(!beacon){
             return res.status(404).json({ message: `It is not possible to delete the beacon with id=${req.params.beaconID}. Perhaps the beacon was not found!` });

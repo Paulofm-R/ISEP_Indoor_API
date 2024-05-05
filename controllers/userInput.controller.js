@@ -7,12 +7,11 @@ exports.create = async (req, res) => {
     // Create mew User input
     const userInput = new UserInput({
         userId: req.body.userId,
-        Comment: req.body.Comment,
+        comment: req.body.comment,
         satafetionLvl: req.body.satafetionLvl,
         answers: [],
         type: req.body.type,
         date: new Date (),
-        resolved: req.body.resolved
     });
 
     try {
@@ -44,7 +43,7 @@ exports.getAll = async (req, res) => {
         // codigo terem acesso a lista de userInputs
         let data = await UserInput
         .find()
-        .select('userId Comment satafetionLvl answers type date resolved')
+        .select('userId Comment satafetionLvl type date resolved')
         .exec();
 
         return res.status(200).json({success: true, userInput: data});
@@ -83,7 +82,7 @@ exports.findUserInput = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         // codigo para fazer alterações no userInput (como responder, considerar )
-        const userInput = await UserInput.findById(req.params.userInputID).exec();
+        const userInput = await UserInput.findById(req.params.userInputID, req.body).exec();
 
         if (userInput === null)
             return res.status(404).json({ success: false, msg: `Could not find any user input with the ID ${req.params.userInputID}.`});
@@ -103,7 +102,7 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     try {
         // codigo para eliminar um userInputs
-        const userInput = await UserInput.findByIdAndRemove(req.params.userInputID).exec();
+        const userInput = await UserInput.findOneAndDelete({ _id: req.params.userInputID }).exec();
 
         if(!userInput){
             return res.status(404).json({ message: `It is not possible to delete the user input with id=${req.params.userInputID}. Perhaps the user input was not found!` });

@@ -73,7 +73,7 @@ router.put('/:beaconID', utilities.validateToken, utilities.isAdmin, (req, res) 
 
 /**
  * @route DELETE /beacons/:beaconID
- * @group Beacon
+ * @group Beacons
  * @param {object} id.path - Beacon ID
  * @returns {object} 204 - Beacon deleted
  * @returns {Error} 401 - You need to be authenticated

@@ -131,7 +131,7 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const user = await User.findByIdAndRemove(req.params.userID).exec()
+        const user = await User.findOneAndDelete({ _id: req.params.userID }).exec();
 
         if (!user) {
             return res.status(404).json({ message: `It is not possible to delete the user with id=${req.params.userID}. Perhaps the user was not found!` });
