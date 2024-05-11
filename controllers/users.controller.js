@@ -75,7 +75,7 @@ exports.getAll = async (req, res) => {
             .find()
             .select('name image type type active AccessibilityLvl')
             .exec();
-        
+
         return res.status(200).json({ success: true, user: data });
     } catch (err) {
         if (err.name === "ValidationError") {
@@ -92,7 +92,7 @@ exports.findUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.userID).exec();
 
-        if (user === null) 
+        if (user === null)
             return res.status(404).json({ success: false, msg: `Could not find any user with the ID ${req.params.userID}` })
 
         if (user._id == req.userID || req.userType == 'admin')
@@ -112,7 +112,12 @@ exports.findUser = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.userID, req.body).exec();
+        let updateData = req.body;
+
+        if(updateData.password) 
+            updateData.password = bcrypt.hashSync(req.body.password, 10)
+
+        const user = await User.findByIdAndUpdate(req.params.userID, updateData).exec();
 
         if (!user) {
             return res.status(404).json({ success: false, msg: `Cannot update user with id=${req.params.userID}. Check if user exists!` });
