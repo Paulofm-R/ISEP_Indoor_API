@@ -22,13 +22,12 @@ exports.login = async (req, res) => {
 
         const token = utilities.generateToken({ id: user._id, type: user.type })
 
-        console.log(token);
-
         return res.status(200).json({
             success: true,
             accessToken: token,
             id: user._id,
             type: user.type,
+            accessibilityLvl: user.AccessibilityLvl
         })
     } catch (err) {
         if (err.name === "ValidationError") {
