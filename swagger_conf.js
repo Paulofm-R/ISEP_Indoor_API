@@ -5,7 +5,7 @@ const options = {
             title: "Indoor Map API",
             version: "1.0.0"
         },
-        host: 'localhost:3000',
+        host: 'https://isep-indoor-api.onrender.com',
         basePath: '/',
         produces: ['application/json'],
         schemes: ['http'],
