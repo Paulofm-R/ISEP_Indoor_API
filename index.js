@@ -7,7 +7,11 @@ const app = express();
 const port = process.env.PORT;
 
 // Allow requests from 'http://localhost:5173'
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 const expressSwagger = require("express-swagger-generator")(app);
 const options = require("./swagger_conf.js");
