@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const userController = require('../controllers/users.controller.js')
-const { validationResult, body } = require('express-validator')
-const utilities = require('../utilities/utilities.js')
+const userController = require("../controllers/users.controller.js");
+const { validationResult, body } = require("express-validator");
+const utilities = require("../utilities/utilities.js");
 
 /**
  * @route POST /users/login
@@ -13,35 +13,40 @@ const utilities = require('../utilities/utilities.js')
  * @returns {Error} 401 - Incorrect credentials
  * @returns {Error} 500 - Something went wrong
  */
-router.post('/login', [
-    body('email').notEmpty().isEmail(),
-    body('password').notEmpty().escape(),
-], (req, res) => {
-    userController.login(req, res)
-})
+router.post(
+  "/login",
+  [body("email").notEmpty().isEmail(), body("password").notEmpty().escape()],
+  (req, res) => {
+    userController.login(req, res);
+  }
+);
 
 /**
  * @route POST /users/register
  * @group Users
  * @param {object} object.body - Form to create user - ex. {"name":"admin", "email": "user@example.com", "password":"1234", "AccessibilityLvl": '0'}
- * @param {enum} object.body.AccessibilityLvl - Level of accessibility - possible values: 0 (without disability), 1 (Visual Impairment), 2 (Motor Disability) 
+ * @param {enum} object.body.AccessibilityLvl - Level of accessibility - possible values: 0 (without disability), 1 (Visual Impairment), 2 (Motor Disability)
  * @returns {object} 201 - New User created successfully.
  * @returns {Error} 400 - Missing data
  * @returns {Error} 500 - Something went wrong
  */
-router.post('/register', [
-    body('name').notEmpty().escape(),
-    body('password').notEmpty().escape(),
-    body('email').notEmpty().isEmail(),
-    body('AccessibilityLvl').notEmpty().escape(),
-], (req, res) => {
+router.post(
+  "/register",
+  [
+    body("name").notEmpty().escape(),
+    body("password").notEmpty().escape(),
+    body("email").notEmpty().isEmail(),
+    body("AccessibilityLvl").notEmpty().escape(),
+  ],
+  (req, res) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
-        userController.register(req, res);
+      userController.register(req, res);
     } else {
-        res.status(404).json({ errors: errors.array() });
+      res.status(404).json({ errors: errors.array() });
     }
-})
+  }
+);
 
 /**
  * @route GET /users/
@@ -52,24 +57,24 @@ router.post('/register', [
  * @returns {Error} 500 - Something went wrong
  * @security Bearer
  */
-router.get('/', utilities.validateToken, utilities.isAdmin, (req, res) => {
-    userController.getAll(req, res);
-})
+router.get("/", utilities.validateToken, utilities.isAdmin, (req, res) => {
+  userController.getAll(req, res);
+});
 
 /**
  * @route GET /users/:userID
  * @group Users
  * @param {object} id.path - User ID
- * @returns {object} 200 - User information searched by id - ex. {"name":"admin", "type":"admin", "image": "url image", "AccessibilityLvl": "0", "actived": "true"} 
+ * @returns {object} 200 - User information searched by id - ex. {"name":"admin", "type":"admin", "image": "url image", "AccessibilityLvl": "0", "actived": "true"}
  * @returns {Error} 401 - You need to be authenticated
  * @returns {Error} 403 - User without permission
  * @returns {Error} 404 - User does not exist/found
  * @returns {Error} 500 - Something went wrong
  * @security Bearer
  */
-router.get('/:userID', utilities.validateToken, (req, res) => {
-    userController.findUser(req, res);
-})
+router.get("/:userID", utilities.validateToken, (req, res) => {
+  userController.findUser(req, res);
+});
 
 /**
  * @route PUT /users/:userID
@@ -83,9 +88,9 @@ router.get('/:userID', utilities.validateToken, (req, res) => {
  * @returns {Error} 500 - Something went wrong
  * @security Bearer
  */
-router.put('/:userID', utilities.validateToken, (req, res) => {
-    userController.update(req, res);
-})
+router.put("/:userID", utilities.validateToken, (req, res) => {
+  userController.update(req, res);
+});
 
 /**
  * @route DELETE /users/:userID
@@ -98,8 +103,8 @@ router.put('/:userID', utilities.validateToken, (req, res) => {
  * @returns {Error} 500 - Something went wrong
  * @security Bearer
  */
-router.delete('/:userID', utilities.validateToken, (req, res) => {
-    userController.delete(req, res);
-})
+router.delete("/:userID", utilities.validateToken, (req, res) => {
+  userController.delete(req, res);
+});
 
 module.exports = router;
