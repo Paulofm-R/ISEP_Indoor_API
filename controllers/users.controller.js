@@ -78,7 +78,7 @@ exports.register = async (req, res) => {
 exports.getAll = async (req, res) => {
   try {
     let data = await User.find()
-      .select("name email image type type active AccessibilityLvl")
+      .select("name email password image type active AccessibilityLvl")
       .exec();
 
     return res.status(200).json({ success: true, user: data });
