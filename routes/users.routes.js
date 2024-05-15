@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/users.controller.js");
-const { validationResult, body } = require("express-validator");
+const { validationResult, body, query } = require("express-validator");
 const utilities = require("../utilities/utilities.js");
 
 /**
@@ -106,5 +106,34 @@ router.put("/:userID", utilities.validateToken, (req, res) => {
 router.delete("/:userID", utilities.validateToken, (req, res) => {
   userController.delete(req, res);
 });
+
+/**
+ * @route PATCH /users?email
+ * @group Users
+ * @param {object} object.body - Change user password - ex. {"name": "usarname", "password": "new password"}
+ * @param {object} email.query - User email
+ * @param {object} name.body - Username
+ * @param {object} password.body - New password
+ * @returns {object} 200 - Password changed
+ * @returns {Error} 401 - teste
+ * @returns {Error} 403 - teste
+ * @returns {Error} 404 - User does not exist/found
+ * @returns {Error} 500 - Something went wrong
+ */
+router.patch('/',
+  [
+    query('email').isEmail().notEmpty(),
+    body('name').notEmpty().escape(),
+    body('password').notEmpty().escape()
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      userController.changePassword(req, res);
+    } else {
+      res.status(400).json({ errors: errors.array() });
+    }
+  }
+);
 
 module.exports = router;

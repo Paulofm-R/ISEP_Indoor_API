@@ -189,3 +189,42 @@ exports.delete = async (req, res) => {
     }
   }
 };
+
+exports.changePassword = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.query.email }).exec();
+
+    if (!user) {
+      return res.status(404).json({
+        message: `Unable to find user with email=${req.query.email}`,
+      });
+    }
+
+    if (user.name !== req.body.name) {
+      return res.status(400).json({
+        message: 'The name provided does not match the user\'s actual username.',
+      });
+    }
+
+    newPassword = bcrypt.hashSync(req.body.password, 10);
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({
+      message: 'Password updated successfully.',
+    });
+
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      let errors = [];
+      Object.keys(err.errors).forEach((key) => {
+        errors.push(err.errors[key].message);
+      });
+      return res.status(400).json({
+        success: false,
+        msg: `Error deleting user with ID ${req.params.userID}.`,
+      });
+    }
+  }
+};
