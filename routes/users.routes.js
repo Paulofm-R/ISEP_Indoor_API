@@ -6,10 +6,10 @@ const utilities = require("../utilities/utilities.js");
 
 /**
  * @route POST /users/login
- * @group Users
+ * @group Users - Operations about users
  * @param {object} object.body - User credentials - ex. {"email":"admin@email.com" "password":"12345"}
- * @param {string} email.body - User email
- * @param {string} password.body - User password
+ * @param {string} email.body.required - User email
+ * @param {string} password.body.required - User password
  * @returns {object} 200 - Bearer Token
  * @returns {Error} 400 - Missing credentials
  * @returns {Error} 401 - Incorrect credentials
@@ -25,12 +25,12 @@ router.post(
 
 /**
  * @route POST /users/register
- * @group Users
+ * @group Users - Operations about users
  * @param {object} object.body - Form to create user - ex. {"name":"admin", "email": "user@example.com", "password":"1234", "AccessibilityLvl": '0'}
- * @param {string} name.body - User name
- * @param {string} email.body - User email
- * @param {string} password.body - User password
- * @param {enum} AccessibilityLvl.body - Level of accessibility - possible values: 0 (without disability), 1 (Visual Impairment), 2 (Motor Disability)
+ * @param {string} name.body.required - User name
+ * @param {string} email.body.required - User email
+ * @param {string} password.body.required - User password
+ * @param {enum} AccessibilityLvl.body.required - Level of accessibility - possible values: 0 (without disability), 1 (Visual Impairment), 2 (Motor Disability)
  * @returns {object} 201 - New User created successfully.
  * @returns {Error} 400 - Missing data
  * @returns {Error} 500 - Something went wrong
@@ -100,12 +100,17 @@ router.get("/:userID", utilities.validateToken, (req, res) => {
   userController.findUser(req, res);
 });
 
-
 /**
  * @route PUT /users/:userID
- * @group Users
+ * @group Users - Operations about users
  * @param {object} object.body - Change user information - ex. {"password": "123456", "email": "adim@example.com", "image": "image.jpg", "type": "admin", "AccessibilityLvl": 1, "actived": "false"}
- * @param {object} id.path - User ID
+ * @param {string} password.body - New user password
+ * @param {string} email.body - New user email
+ * @param {string} image.body - New user image
+ * @param {enum} type.body - New user type - possible values: admin, user
+ * @param {enum} AccessibilityLvl.body - New level of accessibility - possible values: 0 (without disability), 1 (Visual Impairment), 2 (Motor Disability)
+ * @param {boolean} actived.body - New user status - true (Active), false (Disable)
+ * @param {object} id.path.required - User ID
  * @returns {object} 200 - User changed
  * @returns {Error} 401 - You need to be authenticated
  * @returns {Error} 403 - User without permission
@@ -119,8 +124,8 @@ router.put("/:userID", utilities.validateToken, (req, res) => {
 
 /**
  * @route DELETE /users/:userID
- * @group Users
- * @param {object} id.path - User ID
+ * @group Users - Operations about users
+ * @param {object} id.path.required - User ID
  * @returns {object} 204 - User deleted
  * @returns {Error} 401 - You need to be authenticated
  * @returns {Error} 403 - User without permission
@@ -134,11 +139,11 @@ router.delete("/:userID", utilities.validateToken, (req, res) => {
 
 /**
  * @route PATCH /users?email
- * @group Users
+ * @group Users - Operations about users
  * @param {object} object.body - Change user password - ex. {"name": "usarname", "password": "new password"}
- * @param {object} email.query - User email
- * @param {object} name.body - Username
- * @param {object} password.body - New password
+ * @param {object} email.query.required - User email
+ * @param {string} name.body.required - Username
+ * @param {string} password.body.required - New password
  * @returns {object} 200 - Password changed
  * @returns {Error} 400 - Unexpected error
  * @returns {Error} 404 - User does not exist/found
