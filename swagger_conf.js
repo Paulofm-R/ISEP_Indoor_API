@@ -3,7 +3,7 @@ const options = {
         info: {
             description: 'API for TASSI project',
             title: "Indoor Map API",
-            version: "1.0.0"
+            version: "1.2.0"
         },
         host: 'https://isep-indoor-api.onrender.com',
         basePath: '/',
